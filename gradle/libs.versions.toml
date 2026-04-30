@@ -45,6 +45,7 @@ kotlinxSerializationJson = "1.7.3"
 kotlinSerializationPlugin = "2.1.0"
 navigationUiKtx = "2.9.8"
 benchmarkCommon = "1.4.1"
+material3 = "1.4.0"
 
 [libraries]
 # Glide
@@ -103,6 +104,7 @@ androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core",
 androidx-test-compose-ui-junit = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeCore"}
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 androidx-benchmark-common = { group = "androidx.benchmark", name = "benchmark-common", version.ref = "benchmarkCommon" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

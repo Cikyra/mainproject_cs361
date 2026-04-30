@@ -1,4 +1,4 @@
-package com.cikyra.hometeam.data.model.domain
+package com.example.mainproject_cs361.data.model.domain
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

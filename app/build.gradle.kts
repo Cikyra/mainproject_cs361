@@ -45,6 +45,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.benchmark.common)
+    implementation(libs.androidx.material3)
     // Glide
     implementation(libs.glide)
     implementation(libs.androidx.navigation.ui.ktx)

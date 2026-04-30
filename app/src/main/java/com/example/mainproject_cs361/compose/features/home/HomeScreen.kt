@@ -1,38 +1,94 @@
 package com.example.mainproject_cs361.compose.features.home
 
+import android.icu.util.Calendar
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.mainproject_cs361.compose.composables.DailySchedule
+import com.example.mainproject_cs361.compose.nav.AppRoutes
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onNavigateToSchedule: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
     ) {
-        HomeScreenContent()
+        HomeScreenContent(onNavigateToSchedule)
     }
 }
 
 @Composable
-fun HomeScreenContent() {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 24.dp, top = 4.dp, end = 24.dp, bottom = 16.dp)
-    ) {
-        // MY WEEK
-        item {
-            //DailyView()
-            Text("Today")
+fun HomeScreenContent(onNavigateToSchedule: () -> Unit) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        HorizontalDivider(
+            Modifier,
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.primaryContainer
+        )
+        Text(   text = "Class Schedule",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                )
+        )
+        HorizontalDivider(
+            Modifier,
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.primaryContainer
+        )
+
+        val formatter = SimpleDateFormat("EEE, MMM dd", Locale.US)
+        Text(
+            text = formatter.format(Calendar.getInstance().time),
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+        )
+        Text(   text = "Select a class to quickly check in",
+            style = TextStyle(
+                fontSize = 15.sp,
+            )
+        )
+
+        DailySchedule(Calendar.getInstance().time)
+
+        Button(onClick = {onNavigateToSchedule()},
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)){
+            Text(
+                text = "View Full Class Schedule",
+                style = TextStyle(
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            )
         }
+
     }
+
+
+
 }

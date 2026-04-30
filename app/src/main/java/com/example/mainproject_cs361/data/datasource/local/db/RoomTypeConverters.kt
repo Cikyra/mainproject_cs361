@@ -1,4 +1,4 @@
-package com.cikyra.hometeam.data.datasource.local.db
+package com.example.mainproject_cs361.data.datasource.local.db
 
 import androidx.room.TypeConverter
 import kotlinx.datetime.Instant

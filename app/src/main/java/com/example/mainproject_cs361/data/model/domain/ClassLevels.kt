@@ -1,4 +1,4 @@
-package com.cikyra.hometeam.data.model.domain
+package com.example.mainproject_cs361.data.model.domain
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
