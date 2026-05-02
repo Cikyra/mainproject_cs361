@@ -20,6 +20,10 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,15 +31,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.mainproject_cs361.R
+import com.example.mainproject_cs361.compose.features.checkin.CheckIn
+import com.example.mainproject_cs361.compose.features.register.Register
 import com.example.mainproject_cs361.data.repo.features.schedule.ClassRepository
 import com.example.mainproject_cs361.utils.MockClassRepository
 import java.util.Date
+import com.example.mainproject_cs361.data.model.domain.Class
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DailySchedule(day: Date?) {
+fun DailySchedule(day: Date?, screen : String, studentName: String) {
     val repository: ClassRepository = MockClassRepository()
     val classes = repository.getClasses(day)
+    var showCheckIn by remember { mutableStateOf(false) }
+    var showRegistration by remember { mutableStateOf(false) }
+    var clickedClass = classes[0]
 
     Column (
         modifier = Modifier.padding(2.dp)
@@ -60,11 +72,33 @@ fun DailySchedule(day: Date?) {
                 ),
                 modifier = Modifier
                     .clickable {
-                        //TODO: click on class
+                        if (screen == "Home") {
+                            showCheckIn = true
+                            clickedClass = item
+                        } else if (screen == "Schedule") {
+                            showRegistration = true
+                            clickedClass = item
+                        }
                     }
-                    .padding(horizontal = 10.dp,
-                                vertical = 3.dp)
+                    .padding(
+                        horizontal = 10.dp,
+                        vertical = 3.dp
+                    )
                     .requiredHeight(90.dp)
+            )
+        }
+
+        if(showCheckIn){
+            CheckIn(
+                clickedClass,
+                day,
+                closeDialogue = { showCheckIn = false },
+                onConfirm = {  }
+            )
+        }
+        if(showRegistration){
+            Register(
+                closeDialogue = { showRegistration = false }
             )
         }
     }

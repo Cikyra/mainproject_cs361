@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.mainproject_cs361"
-        minSdk = 24
+        minSdk = 29
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -45,6 +45,8 @@ android {
 
 dependencies {
     implementation(libs.androidx.benchmark.common)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.remote.creation.compose)
     implementation(libs.androidx.material3)
     // Glide
     implementation(libs.glide)

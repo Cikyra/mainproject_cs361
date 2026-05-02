@@ -4,27 +4,25 @@ import android.icu.util.Calendar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.mainproject_cs361.compose.composables.DailySchedule
-import com.example.mainproject_cs361.compose.nav.AppRoutes
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -61,7 +59,7 @@ fun HomeScreenContent(onNavigateToSchedule: () -> Unit) {
             color = MaterialTheme.colorScheme.primaryContainer
         )
 
-        val formatter = SimpleDateFormat("EEE, MMM dd", Locale.US)
+        val formatter = SimpleDateFormat("EEEE, MMMM dd", Locale.US)
         Text(
             text = formatter.format(Calendar.getInstance().time),
             style = TextStyle(
@@ -75,7 +73,10 @@ fun HomeScreenContent(onNavigateToSchedule: () -> Unit) {
             )
         )
 
-        DailySchedule(Calendar.getInstance().time)
+        var studentName by remember { mutableStateOf("") }
+        DailySchedule(Calendar.getInstance().time, "Home", studentName)
+
+
 
         Button(onClick = {onNavigateToSchedule()},
             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)){
