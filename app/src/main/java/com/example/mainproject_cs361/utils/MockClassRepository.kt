@@ -7,9 +7,9 @@ import java.util.Locale
 import com.example.mainproject_cs361.data.model.domain.Class
 
 class MockClassRepository : ClassRepository{
-    var classRegistry = mutableMapOf<String, MutableList<Class>>()
-    var classCheckIns = mutableMapOf<String, MutableList<Class>>()
-    fun register(name : String, reg : Class) : Boolean{
+    var classRegistry = mutableMapOf<String, MutableList<String>>()
+    var classCheckIns = mutableMapOf<String, MutableList<String>>()
+    fun register(name : String, reg : String) : Boolean{
         classRegistry.getOrPut(name) {mutableListOf()}
         if(!classRegistry.getValue(name).contains(reg)){
             classRegistry.getValue(name).add(reg)
@@ -20,7 +20,7 @@ class MockClassRepository : ClassRepository{
         }
     }
 
-    fun checkIn(name : String, check : Class) : Boolean{
+    fun checkIn(name : String, check : String) : Boolean{
         classCheckIns.getOrPut(name) {mutableListOf()}
         if(!classCheckIns.getValue(name).contains(check)){
             classCheckIns.getValue(name).add(check)

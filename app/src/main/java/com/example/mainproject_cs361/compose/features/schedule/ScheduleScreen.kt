@@ -35,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.mainproject_cs361.data.model.domain.Class
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -105,8 +106,15 @@ fun ScheduleScreenContent(){
         )
 
         var studentName by remember { mutableStateOf("") }
-        DailySchedule(selectedDate.toDate(), "Schedule", studentName)
-
+        var currClass by remember { mutableStateOf<Class?>(null) }
+        DailySchedule(
+            day = Calendar.getInstance().time,
+            screen = "Schedule",
+            onCheckInConfirm = { name, clickedClass ->
+                studentName = name
+                currClass = clickedClass
+            }
+        )
 
     }
 }
