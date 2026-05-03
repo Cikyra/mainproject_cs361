@@ -94,7 +94,13 @@ fun DailySchedule(
         }
         if(showRegistration){
             Register(
-                closeDialogue = { showRegistration = false }
+                clickedClass,
+                day,
+                closeDialogue = { showRegistration = false },
+                onConfirm = { name ->
+                    onCheckInConfirm(name, clickedClass)
+                    showRegistration = false
+                }
             )
         }
     }

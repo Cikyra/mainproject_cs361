@@ -14,15 +14,22 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,15 +40,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.mainproject_cs361.data.model.domain.Class
+import com.example.mainproject_cs361.utils.MockClassRepository
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
+import kotlinx.datetime.toJavaInstant
 import kotlinx.datetime.toLocalDateTime
+import java.time.ZoneId
 
 @Composable
 fun ScheduleScreen(){
@@ -107,14 +120,130 @@ fun ScheduleScreenContent(){
 
         var studentName by remember { mutableStateOf("") }
         var currClass by remember { mutableStateOf<Class?>(null) }
+        val repository = remember { MockClassRepository() }
+        var showDialogue by remember { mutableStateOf(false) }
+        var showCancel by remember { mutableStateOf(false) }
+
         DailySchedule(
-            day = Calendar.getInstance().time,
+            day = selectedDate.toDate(),
             screen = "Schedule",
             onCheckInConfirm = { name, clickedClass ->
                 studentName = name
                 currClass = clickedClass
+                showDialogue = true
             }
         )
+
+        if(studentName != ""){
+            if(repository.register(studentName, currClass?.id ?: "")){
+                Dialog(onDismissRequest = { studentName = "" }) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .padding(16.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSurface)
+                    ) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "Registration Successful", style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(15.dp,10.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "$studentName is now registered for ",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentSize(Alignment.Center),
+                            textAlign = TextAlign.Center,
+                        )
+                        " " + currClass?.startTime + " " + currClass?.title
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = " " + currClass?.startTime + " " + currClass?.title,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentSize(Alignment.Center),
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+            else{ //already checked in
+                if(showDialogue) {
+                    AlertDialog(
+                        onDismissRequest = {
+                            showDialogue = false
+                            studentName = ""
+                        },
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
+                        title = { Text(text = "Register") },
+                        text = {
+                            Column {
+                                Text("$studentName is already registered for: ")
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(currClass?.startTime + " " + currClass?.title)
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text("Would you like to cancel your registration?")
+                            }
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    showDialogue = false
+                                    studentName = ""
+                                },
+                                colors = ButtonDefaults.textButtonColors(MaterialTheme.colorScheme.primary)
+                            ) {
+                                Text("No, return", color = MaterialTheme.colorScheme.onPrimary)
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = {
+                                showCancel = true
+                                showDialogue = false
+                            }) {
+                                Text("Yes, cancel")
+                            }
+                        }
+                    )
+                }
+
+                if(showCancel){
+                    repository.classRegistry.getValue(studentName).remove(currClass?.id)
+                    Dialog(onDismissRequest = {
+                        showCancel = false
+                        studentName = ""
+                    }) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .padding(16.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onSurface)
+                        ) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(text = "Registration Canceled", style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(15.dp,10.dp))
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Successfully canceled $studentName's registration",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentSize(Alignment.Center)
+                                    .padding(10.dp),
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
+                }
+            }
+        }
 
     }
 }
