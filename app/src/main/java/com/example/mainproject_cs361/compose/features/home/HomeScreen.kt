@@ -41,18 +41,24 @@ import java.util.Locale
 import com.example.mainproject_cs361.data.model.domain.Class
 
 @Composable
-fun HomeScreen(onNavigateToSchedule: () -> Unit) {
+fun HomeScreen(
+    repository: MockClassRepository,
+    onNavigateToSchedule: () -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
     ) {
-        HomeScreenContent(onNavigateToSchedule)
+        HomeScreenContent(repository, onNavigateToSchedule)
     }
 }
 
 @Composable
-fun HomeScreenContent(onNavigateToSchedule: () -> Unit) {
+fun HomeScreenContent(
+    repository: MockClassRepository,
+    onNavigateToSchedule: () -> Unit
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
@@ -90,13 +96,13 @@ fun HomeScreenContent(onNavigateToSchedule: () -> Unit) {
 
         var studentName by remember { mutableStateOf("") }
         var currClass by remember { mutableStateOf<Class?>(null) }
-        val repository = remember { MockClassRepository() }
         var showDialogue by remember { mutableStateOf(false) }
         var showCancel by remember { mutableStateOf(false) }
 
         DailySchedule(
             day = Calendar.getInstance().time,
             screen = "Home",
+            repository = repository,
             onCheckInConfirm = { name, clickedClass ->
                 studentName = name
                 currClass = clickedClass

@@ -57,18 +57,18 @@ import kotlinx.datetime.toLocalDateTime
 import java.time.ZoneId
 
 @Composable
-fun ScheduleScreen(){
+fun ScheduleScreen(repository: MockClassRepository){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
     ) {
-        ScheduleScreenContent()
+        ScheduleScreenContent(repository)
     }
 }
 
 @Composable
-fun ScheduleScreenContent(){
+fun ScheduleScreenContent(repository: MockClassRepository){
     Column(horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
             .verticalScroll(rememberScrollState()),
@@ -120,13 +120,13 @@ fun ScheduleScreenContent(){
 
         var studentName by remember { mutableStateOf("") }
         var currClass by remember { mutableStateOf<Class?>(null) }
-        val repository = remember { MockClassRepository() }
         var showDialogue by remember { mutableStateOf(false) }
         var showCancel by remember { mutableStateOf(false) }
 
         DailySchedule(
             day = selectedDate.toDate(),
             screen = "Schedule",
+            repository = repository,
             onCheckInConfirm = { name, clickedClass ->
                 studentName = name
                 currClass = clickedClass

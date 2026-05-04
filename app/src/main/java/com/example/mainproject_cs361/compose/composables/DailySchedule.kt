@@ -34,9 +34,9 @@ import java.util.Date
 fun DailySchedule(
     day: Date?,
     screen: String,
+    repository: MockClassRepository = remember { MockClassRepository() },
     onCheckInConfirm: (String, Class) -> Unit = { _, _ -> }
 ) {
-    val repository: ClassRepository = MockClassRepository()
     val classes = repository.getClasses(day)
     var showCheckIn by remember { mutableStateOf(false) }
     var showRegistration by remember { mutableStateOf(false) }

@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.navigation.NavController
@@ -27,6 +28,7 @@ import com.example.mainproject_cs361.compose.nav.AppRoutes
 import com.example.mainproject_cs361.theme.AppTheme
 import com.example.mainproject_cs361.compose.features.home.HomeScreen
 import com.example.mainproject_cs361.compose.features.schedule.ScheduleScreen
+import com.example.mainproject_cs361.utils.MockClassRepository
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -40,6 +42,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
+            val repository = remember { MockClassRepository() }
 
             AppTheme {
                 Scaffold(
@@ -54,11 +57,14 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable<AppRoutes.Home> {
-                            HomeScreen(onNavigateToSchedule = {navController.navigate(AppRoutes.Schedule())})
+                            HomeScreen(
+                                repository = repository,
+                                onNavigateToSchedule = { navController.navigate(AppRoutes.Schedule()) }
+                            )
                         }
 
                         composable<AppRoutes.Schedule> {
-                            ScheduleScreen()
+                            ScheduleScreen(repository = repository)
                         }
                     }
                 }
