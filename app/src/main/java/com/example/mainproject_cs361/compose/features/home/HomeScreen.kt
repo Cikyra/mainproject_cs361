@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,7 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.mainproject_cs361.compose.composables.DailySchedule
+import com.example.mainproject_cs361.compose.features.rating.Rating
 import com.example.mainproject_cs361.utils.MockClassRepository
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Locale
 import com.example.mainproject_cs361.data.model.domain.Class
@@ -98,6 +101,22 @@ fun HomeScreenContent(
         var currClass by remember { mutableStateOf<Class?>(null) }
         var showDialogue by remember { mutableStateOf(false) }
         var showCancel by remember { mutableStateOf(false) }
+        var showRating by remember { mutableStateOf(false) }
+        var checkInSuccess by remember { mutableStateOf<Boolean?>(null) }
+        var triggerRatingTimer by remember { mutableStateOf(false) }
+        var ratingEntityId by remember { mutableStateOf("") }
+
+        if (showRating) {
+            Rating(entityId = ratingEntityId, onDismiss = { showRating = false })
+        }
+
+        LaunchedEffect(triggerRatingTimer) {
+            if (triggerRatingTimer) {
+                delay(5000)
+                showRating = true
+                triggerRatingTimer = false
+            }
+        }
 
         DailySchedule(
             day = Calendar.getInstance().time,
@@ -106,13 +125,19 @@ fun HomeScreenContent(
             onCheckInConfirm = { name, clickedClass ->
                 studentName = name
                 currClass = clickedClass
+                checkInSuccess = repository.checkIn(name, clickedClass.id)
                 showDialogue = true
             }
         )
 
-        if(studentName != ""){
-            if(repository.checkIn(studentName, currClass?.id ?: "")){
-                Dialog(onDismissRequest = { studentName = "" }) {
+        if(studentName != "" && checkInSuccess != null){
+            if(checkInSuccess == true){
+                Dialog(onDismissRequest = {
+                    ratingEntityId = currClass?.id ?: ""
+                    triggerRatingTimer = true
+                    studentName = "" 
+                    checkInSuccess = null
+                }) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -153,6 +178,7 @@ fun HomeScreenContent(
                         onDismissRequest = { 
                             showDialogue = false
                             studentName = ""
+                            checkInSuccess = null
                         },
                         containerColor = MaterialTheme.colorScheme.onPrimary,
                         title = { Text(text = "Check In") },
@@ -170,6 +196,7 @@ fun HomeScreenContent(
                                 onClick = { 
                                     showDialogue = false
                                     studentName = ""
+                                    checkInSuccess = null
                                 },
                                 colors = ButtonDefaults.textButtonColors(MaterialTheme.colorScheme.primary)
                             ) {
@@ -192,6 +219,7 @@ fun HomeScreenContent(
                     Dialog(onDismissRequest = { 
                         showCancel = false
                         studentName = ""
+                        checkInSuccess = null
                     }) {
                         Card(
                             modifier = Modifier
