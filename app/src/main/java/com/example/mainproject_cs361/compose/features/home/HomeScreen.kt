@@ -121,11 +121,10 @@ fun HomeScreenContent(
         DailySchedule(
             day = Calendar.getInstance().time,
             screen = "Home",
-            repository = repository,
             onCheckInConfirm = { name, clickedClass ->
                 studentName = name
                 currClass = clickedClass
-                checkInSuccess = repository.checkIn(name, clickedClass.id)
+                checkInSuccess = repository.checkIn(name, clickedClass.id.toString())
                 showDialogue = true
             }
         )
@@ -133,7 +132,7 @@ fun HomeScreenContent(
         if(studentName != "" && checkInSuccess != null){
             if(checkInSuccess == true){
                 Dialog(onDismissRequest = {
-                    ratingEntityId = currClass?.id ?: ""
+                    ratingEntityId = currClass?.id.toString()
                     triggerRatingTimer = true
                     studentName = "" 
                     checkInSuccess = null
@@ -215,7 +214,7 @@ fun HomeScreenContent(
                 }
                 
                 if(showCancel){
-                    repository.classCheckIns.getValue(studentName).remove(currClass?.id)
+                    repository.classCheckIns.getValue(studentName).remove(currClass?.id.toString())
                     Dialog(onDismissRequest = { 
                         showCancel = false
                         studentName = ""

@@ -6,6 +6,7 @@ import java.util.Date
 import java.util.Locale
 import com.example.mainproject_cs361.data.model.domain.Class
 
+//TODO: outsource check in and registration to schedule-service
 class MockClassRepository : ClassRepository{
     var classRegistry = mutableMapOf<String, MutableList<String>>()
     var classCheckIns = mutableMapOf<String, MutableList<String>>()
@@ -41,43 +42,38 @@ class MockClassRepository : ClassRepository{
         when (dayString) {
             "Mon" -> {
                 val beginners = Class(
-                    "MonBeginners", "Beginners",
+                    1, "Beginners",
                     "Youth (ages 7-11) students yellow and orange belts",
                     "4:00pm",
                     "4:30pm",
-                    true
                 )
                 val champions = Class(
-                    "MonChampions",
+                    2,
                     "Champions",
                     "Students age 3-6 all belt ranks",
                     "4:30pm",
-                    "5:00pm",
-                    true
+                    "5:00pm"
                 )
                 val whiteBelts = Class(
-                    "MonWhiteBelts",
+                    3,
                     "White Belts",
                     "Youth (age 7-11) students new to the program and graduating Champions",
                     "5:00pm",
                     "5:30pm",
-                    true
                 )
                 val intermediates = Class(
-                    "MonIntermediates",
+                    4,
                     "Intermediates",
                     "Youth (age 7-11) students purple belt and above",
                     "5:30pm",
                     "6:00pm",
-                    true
                 )
                 val teenAdult = Class(
-                    "MonTeenAdults",
+                    5,
                     "Teen & Adults",
                     "Teen & Adult (ages 12+) students all belt ranks",
                     "6:00pm",
                     "6:45pm",
-                    true
                 )
                 classList.add(beginners)
                 classList.add(champions)
@@ -87,51 +83,45 @@ class MockClassRepository : ClassRepository{
             }
             "Tue" -> {
                 val champions = Class(
-                    "TueChampions",
+                    6,
                     "Champions",
                     "Students age 3-6 all belt ranks",
                     "4:00pm",
                     "4:30pm",
-                    true
                 )
                 val intermediates = Class(
-                    "TueIntermediates",
+                    7,
                     "Intermediates",
                     "Youth (age 7-11) students purple belt and above",
                     "4:30pm",
                     "5:00pm",
-                    true
                 )
                 val beginners = Class(
-                    "TueBeginners", "Beginners",
+                    8, "Beginners",
                     "Youth (ages 7-11) students yellow and orange belts",
                     "5:00pm",
                     "5:30pm",
-                    true
                 )
                 val whiteBelts = Class(
-                    "TueWhiteBelts",
+                    9,
                     "White Belts",
                     "Youth (age 7-11) students new to the program and graduating Champions",
                     "5:30pm",
                     "6:00pm",
-                    true
                 )
                 val teenAdult = Class(
-                    "TueTeenAdults",
+                    10,
                     "Teen & Adults",
                     "Teen & Adult (ages 12+) students all belt ranks",
                     "6:00pm",
                     "6:45pm",
-                    true
                 )
                 val sparring = Class(
-                    "Sparring",
+                    11,
                     "Sparring",
                     "Point-fighting class for students purple belt and above",
                     "7:00pm",
                     "8:00pm",
-                    true
                 )
                 classList.add(champions)
                 classList.add(intermediates)
@@ -142,43 +132,38 @@ class MockClassRepository : ClassRepository{
             }
             "Wed" -> {
                 val beginners = Class(
-                    "WedBeginners", "Beginners",
+                    12, "Beginners",
                     "Youth (ages 7-11) students yellow and orange belts",
                     "4:00pm",
                     "4:30pm",
-                    true
                 )
                 val champions = Class(
-                    "WedChampions",
+                    13,
                     "Champions",
                     "Students age 3-6 all belt ranks",
                     "4:30pm",
                     "5:00pm",
-                    true
                 )
                 val whiteBelts = Class(
-                    "WedWhiteBelts",
+                    14,
                     "White Belts",
                     "Youth (age 7-11) students new to the program and graduating Champions",
                     "5:00pm",
                     "5:30pm",
-                    true
                 )
                 val intermediates = Class(
-                    "WedIntermediates",
+                    15,
                     "Intermediates",
                     "Youth (age 7-11) students purple belt and above",
                     "5:30pm",
                     "6:00pm",
-                    true
                 )
                 val teenAdult = Class(
-                    "WedTeenAdults",
+                    16,
                     "Teen & Adults",
                     "Teen & Adult (ages 12+) students all belt ranks",
                     "6:00pm",
                     "6:45pm",
-                    true
                 )
                 classList.add(beginners)
                 classList.add(champions)
@@ -188,43 +173,38 @@ class MockClassRepository : ClassRepository{
             }
             "Thu" -> {
                 val champions = Class(
-                    "ThuChampions",
+                    17,
                     "Champions",
                     "Students age 3-6 all belt ranks",
                     "4:00pm",
                     "4:30pm",
-                    true
                 )
                 val intermediates = Class(
-                    "ThuIntermediates",
+                    18,
                     "Intermediates",
                     "Youth (age 7-11) students purple belt and above",
                     "4:30pm",
                     "5:00pm",
-                    true
                 )
                 val beginners = Class(
-                    "ThuBeginners", "Beginners",
+                    19, "Beginners",
                     "Youth (ages 7-11) students yellow and orange belts",
                     "5:00pm",
                     "5:30pm",
-                    true
                 )
                 val whiteBelts = Class(
-                    "ThuWhiteBelts",
+                    20,
                     "White Belts",
                     "Youth (age 7-11) students new to the program and graduating Champions",
                     "5:30pm",
                     "6:00pm",
-                    true
                 )
                 val teenAdult = Class(
-                    "ThuTeenAdults",
+                    21,
                     "Teen & Adults",
                     "Teen & Adult (ages 12+) students all belt ranks",
                     "6:00pm",
                     "6:45pm",
-                    true
                 )
                 classList.add(champions)
                 classList.add(intermediates)
@@ -234,76 +214,68 @@ class MockClassRepository : ClassRepository{
             }
             "Fri" -> {
                 val leadership = Class(
-                    "FriLeadership",
+                    22,
                     "Leadership",
                     "Inspiring leaders of TMA",
                     "4:30pm",
                     "5:15pm",
-                    true
                 )
                 classList.add(leadership)
 
                 val demo = Class(
-                    "FriDemo",
+                    23,
                     "Demo",
                     "Selected students part of TMA's demonstration team",
                     "5:15pm",
                     "6:00pm",
-                    true
                 )
                 classList.add(demo)
 
                 val prep = Class(
-                    "FriPrep",
+                    24,
                     "BBE Prep",
                     "Knowledge-based class for students in the current flight",
                     "6:00pm",
                     "7:00pm",
-                    true
                 )
                 classList.add(prep)
 
                 val sparring = Class(
-                    "FriSparring",
+                    25,
                     "Sparring",
                     "Point-fighting class for students purple belt and above",
                     "7:00pm",
                     "8:30pm",
-                    true
                 )
                 classList.add(sparring)
             }
             "Sat" -> {
                 val teenAdult = Class(
-                    "SatTeenAdults",
+                    26,
                     "Teen & Adults",
                     "Teen & Adult (ages 12+) students all belt ranks",
                     "9:00am",
                     "9:45am",
-                    true
                 )
                 val champions = Class(
-                    "SatChampions",
+                    27,
                     "Champions",
                     "Students age 3-6 all belt ranks",
                     "10:00am",
                     "10:30am",
-                    true
                 )
                 val beginners = Class(
-                    "SatBeginners", "Beginners",
+                    28, "Beginners",
                     "Youth (ages 7-11) students yellow and orange belts",
                     "10:30am",
                     "11:00am",
-                    true
                 )
                 val intermediates = Class(
-                    "SatIntermediates",
+                    29,
                     "Intermediates",
                     "Youth (age 7-11) students purple belt and above",
                     "11:00am",
                     "11:30am",
-                    true
                 )
                 classList.add(teenAdult)
                 classList.add(champions)
@@ -311,39 +283,35 @@ class MockClassRepository : ClassRepository{
                 classList.add(intermediates)
 
                 val sparring = Class(
-                    "SatSparring",
+                    30,
                     "Sparring",
                     "Point-fighting class for students purple belt and above",
                     "11:30am",
                     "12:30pm",
-                    true
                 )
                 classList.add(sparring)
 
             }
             "Sun" -> {
                 val teenAdult = Class(
-                    "SunTeenAdults",
+                    31,
                     "Teen & Adults",
                     "Teen & Adult (ages 12+) students all belt ranks",
                     "11:00am",
                     "11:45am",
-                    true
                 )
                 val beginners = Class(
-                    "SunBeginners", "Beginners",
+                    32, "Beginners",
                     "Youth (ages 7-11) students yellow and orange belts",
                     "12:00pm",
                     "12:30pm",
-                    true
                 )
                 val intermediates = Class(
-                    "SunIntermediates",
+                    33,
                     "Intermediates",
                     "Youth (age 7-11) students purple belt and above",
                     "12:00pm",
                     "12:30pm",
-                    true
                 )
 
                 classList.add(teenAdult)

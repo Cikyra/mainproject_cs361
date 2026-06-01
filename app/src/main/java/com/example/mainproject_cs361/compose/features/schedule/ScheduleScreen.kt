@@ -126,7 +126,6 @@ fun ScheduleScreenContent(repository: MockClassRepository){
         DailySchedule(
             day = selectedDate.toDate(),
             screen = "Schedule",
-            repository = repository,
             onCheckInConfirm = { name, clickedClass ->
                 studentName = name
                 currClass = clickedClass
@@ -135,7 +134,7 @@ fun ScheduleScreenContent(repository: MockClassRepository){
         )
 
         if(studentName != ""){
-            if(repository.register(studentName, currClass?.id ?: "")){
+            if(repository.register(studentName, currClass?.id.toString())){
                 Dialog(onDismissRequest = { studentName = "" }) {
                     Card(
                         modifier = Modifier
@@ -171,7 +170,7 @@ fun ScheduleScreenContent(repository: MockClassRepository){
                     }
                 }
             }
-            else{ //already checked in
+            else{ //already registered
                 if(showDialogue) {
                     AlertDialog(
                         onDismissRequest = {
@@ -212,7 +211,7 @@ fun ScheduleScreenContent(repository: MockClassRepository){
                 }
 
                 if(showCancel){
-                    repository.classRegistry.getValue(studentName).remove(currClass?.id)
+                    repository.classRegistry.getValue(studentName).remove(currClass?.id.toString())
                     Dialog(onDismissRequest = {
                         showCancel = false
                         studentName = ""

@@ -6,18 +6,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Class(
-    val id: String,
+    @SerialName("class_id") var id: Int,
     val title: String,
     val subtitle: String? = null,
-    //val schedule: Schedule,
-    var startTime: String,
-    var endTime: String,
-    val active: Boolean,
+    @SerialName("start_time") var startTime: String,
+    @SerialName("end_time") var endTime: String,
     val description: String? = null,
-    @SerialName("photo_urls") val photoUrls: List<String>? = null,
-
-    //registration
-
-    //val createdAt: LocalDateTime,
-    //val updatedAt: LocalDateTime,
 )
