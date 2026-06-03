@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +40,7 @@ import com.example.mainproject_cs361.compose.composables.DailySchedule
 import com.example.mainproject_cs361.compose.features.rating.Rating
 import com.example.mainproject_cs361.utils.MockClassRepository
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import com.example.mainproject_cs361.data.model.domain.Class
@@ -62,6 +64,7 @@ fun HomeScreenContent(
     repository: MockClassRepository,
     onNavigateToSchedule: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     Column(horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
@@ -124,8 +127,10 @@ fun HomeScreenContent(
             onCheckInConfirm = { name, clickedClass ->
                 studentName = name
                 currClass = clickedClass
-                checkInSuccess = repository.checkIn(name, clickedClass.id.toString())
-                showDialogue = true
+                scope.launch {
+                    checkInSuccess = repository.checkIn(name, clickedClass.id)
+                    showDialogue = true
+                }
             }
         )
 
@@ -204,8 +209,12 @@ fun HomeScreenContent(
                         },
                         dismissButton = {
                             TextButton(onClick = {
-                                showCancel = true
-                                showDialogue = false
+                                scope.launch {
+                                    if(repository.cancelCheckIn(studentName, currClass?.id ?: 0)) {
+                                        showCancel = true
+                                        showDialogue = false
+                                    }
+                                }
                             }) {
                                 Text("Yes, cancel check in")
                             }
@@ -214,7 +223,6 @@ fun HomeScreenContent(
                 }
                 
                 if(showCancel){
-                    repository.classCheckIns.getValue(studentName).remove(currClass?.id.toString())
                     Dialog(onDismissRequest = { 
                         showCancel = false
                         studentName = ""

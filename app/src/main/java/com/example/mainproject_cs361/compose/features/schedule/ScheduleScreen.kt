@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.mainproject_cs361.data.model.domain.Class
 import com.example.mainproject_cs361.utils.MockClassRepository
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -69,6 +71,7 @@ fun ScheduleScreen(repository: MockClassRepository){
 
 @Composable
 fun ScheduleScreenContent(repository: MockClassRepository){
+    val scope = rememberCoroutineScope()
     Column(horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
             .verticalScroll(rememberScrollState()),
@@ -122,6 +125,7 @@ fun ScheduleScreenContent(repository: MockClassRepository){
         var currClass by remember { mutableStateOf<Class?>(null) }
         var showDialogue by remember { mutableStateOf(false) }
         var showCancel by remember { mutableStateOf(false) }
+        var registrationSuccess by remember { mutableStateOf<Boolean?>(null) }
 
         DailySchedule(
             day = selectedDate.toDate(),
@@ -129,13 +133,19 @@ fun ScheduleScreenContent(repository: MockClassRepository){
             onCheckInConfirm = { name, clickedClass ->
                 studentName = name
                 currClass = clickedClass
-                showDialogue = true
+                scope.launch {
+                    registrationSuccess = repository.register(name, clickedClass.id)
+                    showDialogue = true
+                }
             }
         )
 
-        if(studentName != ""){
-            if(repository.register(studentName, currClass?.id.toString())){
-                Dialog(onDismissRequest = { studentName = "" }) {
+        if(studentName != "" && registrationSuccess != null){
+            if(registrationSuccess == true){
+                Dialog(onDismissRequest = { 
+                    studentName = ""
+                    registrationSuccess = null
+                }) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -157,7 +167,6 @@ fun ScheduleScreenContent(repository: MockClassRepository){
                                 .wrapContentSize(Alignment.Center),
                             textAlign = TextAlign.Center,
                         )
-                        " " + currClass?.startTime + " " + currClass?.title
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = " " + currClass?.startTime + " " + currClass?.title,
@@ -176,6 +185,7 @@ fun ScheduleScreenContent(repository: MockClassRepository){
                         onDismissRequest = {
                             showDialogue = false
                             studentName = ""
+                            registrationSuccess = null
                         },
                         containerColor = MaterialTheme.colorScheme.onPrimary,
                         title = { Text(text = "Register") },
@@ -193,6 +203,7 @@ fun ScheduleScreenContent(repository: MockClassRepository){
                                 onClick = {
                                     showDialogue = false
                                     studentName = ""
+                                    registrationSuccess = null
                                 },
                                 colors = ButtonDefaults.textButtonColors(MaterialTheme.colorScheme.primary)
                             ) {
@@ -201,8 +212,12 @@ fun ScheduleScreenContent(repository: MockClassRepository){
                         },
                         dismissButton = {
                             TextButton(onClick = {
-                                showCancel = true
-                                showDialogue = false
+                                scope.launch {
+                                    if(repository.cancelRegistration(studentName, currClass?.id ?: 0)) {
+                                        showCancel = true
+                                        showDialogue = false
+                                    }
+                                }
                             }) {
                                 Text("Yes, cancel")
                             }
@@ -211,10 +226,10 @@ fun ScheduleScreenContent(repository: MockClassRepository){
                 }
 
                 if(showCancel){
-                    repository.classRegistry.getValue(studentName).remove(currClass?.id.toString())
                     Dialog(onDismissRequest = {
                         showCancel = false
                         studentName = ""
+                        registrationSuccess = null
                     }) {
                         Card(
                             modifier = Modifier
