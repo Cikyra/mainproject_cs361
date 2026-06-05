@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.mainproject_cs361.data.model.domain.Class
+import com.example.mainproject_cs361.data.repo.features.auth.AuthRepository
 import com.example.mainproject_cs361.utils.MockClassRepository
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -59,18 +60,24 @@ import kotlinx.datetime.toLocalDateTime
 import java.time.ZoneId
 
 @Composable
-fun ScheduleScreen(repository: MockClassRepository){
+fun ScheduleScreen(
+    repository: MockClassRepository,
+    authRepository: AuthRepository
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
     ) {
-        ScheduleScreenContent(repository)
+        ScheduleScreenContent(repository, authRepository)
     }
 }
 
 @Composable
-fun ScheduleScreenContent(repository: MockClassRepository){
+fun ScheduleScreenContent(
+    repository: MockClassRepository,
+    authRepository: AuthRepository
+) {
     val scope = rememberCoroutineScope()
     Column(horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
@@ -135,6 +142,15 @@ fun ScheduleScreenContent(repository: MockClassRepository){
                 currClass = clickedClass
                 scope.launch {
                     registrationSuccess = repository.register(name, clickedClass.id)
+                    if (registrationSuccess == true) {
+                        val userId = authRepository.currentUser?.uid ?: "UnknownUser"
+                        repository.sendReminder(
+                            userId = userId,
+                            studentName = name,
+                            classTitle = clickedClass.title,
+                            startTime = clickedClass.startTime
+                        )
+                    }
                     showDialogue = true
                 }
             }

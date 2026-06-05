@@ -47,7 +47,7 @@ fun DailySchedule(
     var showRegistration by remember { mutableStateOf(false) }
     var clickedClass by remember { mutableStateOf<Class?>(null) }
 
-    LaunchedEffect(day) {
+    LaunchedEffect(day?.time) {
         classes = fetchClasses(day)
     }
 

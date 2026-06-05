@@ -15,6 +15,9 @@ object AppRoutes {
     object SplashScreen
 
     @Serializable
+    object Login
+
+    @Serializable
     data class Home(
         override val name: Int = R.string.home,
         override val activeIcon: Int = R.drawable.home_icon_active,

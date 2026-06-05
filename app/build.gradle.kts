@@ -6,11 +6,13 @@ plugins {
 
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
+
+    id("com.google.gms.google-services")
 }
 
 android {
     namespace = "com.example.mainproject_cs361"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.mainproject_cs361"
@@ -79,6 +81,7 @@ dependencies {
     // Material Design
     implementation(libs.avs.material)
     implementation(libs.androidx.compose.material)
+    implementation(libs.compose.icons.extended)
     implementation(libs.androidx.compose.material3)
 
     // Core
@@ -107,4 +110,12 @@ dependencies {
 
 
     implementation(libs.androidx.lifecycle.runtime.compose)
+
+
+    //Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.messaging)
+    implementation(libs.kotlinx.coroutines.play.services)
 }

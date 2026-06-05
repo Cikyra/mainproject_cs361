@@ -85,10 +85,10 @@ fun HomeScreenContent(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.primaryContainer
         )
-
+        var currDate by remember { mutableStateOf(Calendar.getInstance().time) }
         val formatter = SimpleDateFormat("EEEE, MMMM dd", Locale.US)
         Text(
-            text = formatter.format(Calendar.getInstance().time),
+            text = formatter.format(currDate),
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -108,6 +108,7 @@ fun HomeScreenContent(
         var checkInSuccess by remember { mutableStateOf<Boolean?>(null) }
         var triggerRatingTimer by remember { mutableStateOf(false) }
         var ratingEntityId by remember { mutableStateOf("") }
+
 
         if (showRating) {
             Rating(entityId = ratingEntityId, onDismiss = { showRating = false })
